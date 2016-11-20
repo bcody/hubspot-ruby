@@ -32,11 +32,16 @@ module Hubspot
       end
 
       # {http://developers.hubspot.com/docs/methods/engagements/get-all-engagements}
-      def all(opts={})
-        path, opts = [ENGAGEMENTS_PATH, opts]
-
-        response = Hubspot::Connection.get_json(path, opts)
-        response['engagements'].map { |e| new(e) }
+      def all
+        path = ENGAGEMENTS_PATH
+        engagements = []
+        begin
+          response = Hubspot::Connection.get_json(path)
+          engagements = response["results"].try(:map) { |engagement| new(engagement) }
+        rescue => e
+          raise e unless e.message =~ /not found/
+        end
+        engagements
       end
 
       def find(engagement_id)
