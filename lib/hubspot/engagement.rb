@@ -9,6 +9,7 @@ module Hubspot
   class Engagement
     CREATE_ENGAGMEMENT_PATH = '/engagements/v1/engagements'
     ENGAGEMENT_PATH = '/engagements/v1/engagements/:engagement_id'
+    ENGAGEMENTS_PATH = '/engagements/v1/engagements/paged'
     GET_ASSOCIATED_ENGAGEMENTS = '/engagements/v1/engagements/associated/:objectType/:objectId/paged'
 
     attr_reader :id
@@ -28,6 +29,14 @@ module Hubspot
       def create!(params={})
         response = Hubspot::Connection.post_json(CREATE_ENGAGMEMENT_PATH, params: {}, body: params )
         new(HashWithIndifferentAccess.new(response))
+      end
+
+      # {http://developers.hubspot.com/docs/methods/engagements/get-all-engagements}
+      def all(opts={})
+        path, opts = [ENGAGEMENTS_PATH, opts]
+
+        response = Hubspot::Connection.get_json(path, opts)
+        response['engagements'].map { |e| new(e) }
       end
 
       def find(engagement_id)
