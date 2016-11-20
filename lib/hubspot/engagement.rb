@@ -32,8 +32,8 @@ module Hubspot
       end
 
       # {http://developers.hubspot.com/docs/methods/engagements/get-all-engagements}
-      def all
-        path = ENGAGEMENTS_PATH
+      def all(opts={})
+        path = [ENGAGEMENTS_PATH, opts]
         engagements = []
         begin
           response = Hubspot::Connection.get_json(path)
