@@ -20,6 +20,7 @@ module Hubspot
     RECENT_CONTACTS_PATH         = '/contacts/v1/lists/recently_updated/contacts/recent'
     CREATE_OR_UPDATE_PATH        = '/contacts/v1/contact/createOrUpdate/email/:contact_email'
     QUERY_PATH                   = '/contacts/v1/search/query'
+    MERGE_CONTACT_PATH           = '/contacts/v1/contact/merge-vids/:contact_id'
 
     class << self
       # {https://developers.hubspot.com/docs/methods/contacts/create_contact}
@@ -137,6 +138,12 @@ module Hubspot
 
         response = Hubspot::Connection.get_json(QUERY_PATH, { q: query, count: count, offset: offset })
         response.merge("contacts" => response["contacts"].map { |contact_hash| new(contact_hash) })
+      end
+
+      def merge(primary_contact_id, vid_to_merge)
+        post_data = { vidToMerge: vid_to_merge  }
+        response = Hubspot::Connection.post_json(MERGE_CONTACT_PATH, params: {contact_id: primary_contact_id}, body: post_data )
+        new(response)
       end
     end
 
