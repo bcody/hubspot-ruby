@@ -141,8 +141,8 @@ module Hubspot
       end
 
       def merge(primary_contact_id, vid_to_merge)
-        post_data = { vidToMerge: vid_to_merge  }
-        response = Hubspot::Connection.post_json(MERGE_CONTACT_PATH, params: {contact_id: primary_contact_id}, body: post_data )
+        post_data = { vidToMerge: vid_to_merge }
+        response = Hubspot::Connection.post_json(MERGE_CONTACT_PATH, params: { contact_id: primary_contact_id }, body: post_data )
         new(response)
       end
     end
